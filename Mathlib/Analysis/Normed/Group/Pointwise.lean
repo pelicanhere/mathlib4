@@ -59,6 +59,21 @@ section SeminormedCommGroup
 
 variable [SeminormedCommGroup E] {δ : ℝ} {s : Set E} {x y : E}
 
+/-- The distance to a product of sets is bounded by the sum of the distances to the factors. -/
+@[to_additive
+  /-- The distance to a sum of sets is bounded by the sum of the distances to the summands. -/]
+theorem infDist_mul_mul_le (x y : E) (s t : Set E) :
+    infDist (x * y) (s * t) ≤ infDist x s + infDist y t := by
+  rcases (s * t).eq_empty_or_nonempty with hst | hst
+  · simpa [hst] using add_nonneg (infDist_nonneg (x := x) (s := s))
+      (infDist_nonneg (x := y) (s := t))
+  have := (mul_nonempty.mp hst).1.to_subtype
+  have := (mul_nonempty.mp hst).2.to_subtype
+  rw [infDist_eq_iInf (x := x), infDist_eq_iInf (x := y)]
+  refine le_ciInf_add_ciInf fun u v => ?_
+  exact (infDist_le_dist_of_mem (mul_mem_mul u.property v.property)).trans
+    (dist_mul_mul_le x y u v)
+
 section EMetric
 
 open EMetric
