@@ -59,6 +59,12 @@ theorem convexOn_dist (z : E) (hs : Convex ℝ s) : ConvexOn ℝ s fun z' => dis
 theorem convexOn_univ_dist (z : E) : ConvexOn ℝ univ fun z' => dist z' z :=
   convexOn_dist z convex_univ
 
+theorem convexOn_infDist (hs : Convex ℝ s) : ConvexOn ℝ univ (infDist · s) := by
+  obtain rfl | hne := s.eq_empty_or_nonempty
+  · simpa only [infDist_empty] using (convexOn_const 0 convex_univ)
+  refine ⟨convex_univ, fun x _ y _ a b ha hb hab => ?_⟩
+  sorry
+
 theorem convex_ball (a : E) (r : ℝ) : Convex ℝ (ball a r) := by
   simpa only [ball, sep_univ] using (convexOn_univ_dist a).convex_lt r
 
